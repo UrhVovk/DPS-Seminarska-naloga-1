@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\title{Seminar 1 - Processing of images (2D signals)}
+\author{Urh Vovk}
+
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+
+\setlength{\droptitle}{-15em}
+
+\begin{document}
+	\maketitle
+	\pagenumbering{gobble}
+	\section{Abstrakt}
+	Najprej predstavim nalogo, Processing of images, ter 
+	zakaj sem si jo izbral. Samo delo je potekalo v okolju Matlab, kjer sem se poslužil 
+	različnih metod za procesiranje signalov. Zatem opišem rezultate, ki sem jih dobil 
+	z apliciranjem različnih metod, kot sta highboost filter in ostrenje z Laplacovo masko.
+	Na koncu pa še povzamem svoje ugotovitve, ter predlagam možne izboljšave in možne 			drugačne pristope h reševanju naloge.\\
+	\\
+	KLJUČNI POJMI: procesiranje signalov, Matlab, highboost filter, Laplacova maska
+	
+	\section{Uvod}
+	Odločil sem se da izdelam nalogo Processing of images (2D signals), saj mi je tematika 
+	zelo zanimiva in sem se že večkrat igral z urejanjem slik, brez da vedel kako stvar 
+	dejansko deluje. Naloga je zahtevala, da dane črno bele slike poostrim na dva različna 		načina, highboost filter ter z odštevanjem oz. prištevanjem drugega odvoda slike, 			katerega dobimo z uporabo Laplacove maske. Odločil sem se, da nalogo razširim še na barvne slike, kjer je bilo treba delati z vsakim barvnim kanalom posebaj.
+	\section{Metode}
+	Delo je potekalo v okolju Matlab, saj ima ta že veliko vgrajenih funkcionalnosti, ki 		jih lahko uporabim, da si olajšam delo. Naloga je spisana kot Matlab funkcija, ki kot parameter vzame sliko, ter konstanto A.
+	\subsection{Highboost filter}
+	Za apliciranje highboost filtra je bilo potrebno najprej originalno sliko zgladiti, 		kar smo dosegli z uporabo sledečega jedra:  \\
+	\\
+	\centerline{$\begin{bmatrix}
+	\dfrac{1}{9} & \dfrac{1}{9} & \dfrac{1}{9}\\
+	\\
+	\dfrac{1}{9} & \dfrac{1}{9} & \dfrac{1}{9}\\
+	\\
+	\dfrac{1}{9} & \dfrac{1}{9} & \dfrac{1}{9}
+	\end{bmatrix}$}\\
+	\\
+	Uporaba le te nam je zgladila sliko oz. njene posamezne kanale. Naslednji korak je bil da smo od originala odšteli dobljeno zglajeno sliko, nazadnje pa smo to razliko A-krat prišteli originalu. Pri tem je A podana s strani uporabnika.
+	\subsection{Ostrenje z Laplacovo masko}
+	Za ostrenje z Laplacovo masko je pomembno, ali je naš center pozitiven ali negativen, saj nam ta predznak sredinskega piksla, ki je tudi najbolj otežen, pove ali bomo dobljeni drugi odvod prištevali ali odštevali od originala. Poskusil sem dve maski: \\
+	\centerline{
+	$\begin{bmatrix}
+	0 & 1 & 0\\
+	1 & -4 & 1\\
+	0 & 1 & 0
+	\end{bmatrix}$
+	 in 
+	$\begin{bmatrix}
+	1 & 1 & 1\\
+	1 & -8 & 1\\
+	1 & 1 & 1
+	\end{bmatrix}$}\\
+	\\
+	Z uporabo teh dveh mask sem nad sliko izvedel konvolucijo v dveh dimenzijah nad originalno sliko oz. nad njenimi barvnimi kanali v primeru barvne slike. Na koncu pa sem od originala odštel rezultat konvolucije.
+	\section{Rezultati}
+	\subsection{Highboost filter}
+	\begin{figure}[h!]
+		\includegraphics[width=\linewidth]{highboostResults.png}
+		\caption{Rezultati ostrenja s highboost filtrom}
+		\label{fig:resultsHighboost}
+	\end{figure}
+	
+	Ostrenje je bilo najboljše na sliki $\textsc{\char13}teeth \textunderscore bl.png\textsc{\char13}$, saj le ta vsebuje mesta, kjer je velik kontrast med sosednjimi piksli. Med barvnimi slikami so bili rezulatati mešani, najbolje pa je delovalo na sliki $\textsc{\char13}lena \textunderscore color.png\textsc{\char13}$, z A nekje do pribljižno 2. Nekaj izmed barvnih slik, na katerih sem testiral bom dodal v oddaji.
+	
+	\subsection{Ostrenje z Laplacovo masko}
+	\begin{figure}[h!]
+		\includegraphics[width=\linewidth]{laplaceResults.png}
+		\caption{Rezultati ostrenja z Laplacovo masko}
+		\label{fig:resultsLaplace}
+	\end{figure}
+	To ostrenje je bilo dosti bolj učinkovito kot highboost filter in se je na skoraj vseh slikah lepo poznalo. Maska z -8 na sredini je ostrila močneje kot tista z -4.
+	
+	\section{Ugotovitve}
+	Po končani nalogi sem opazil, da je bilo v splošnem bolj efektivno ostrenje z Laplacovo masko. 
+	To je zato, ker bolje zazna robove, saj je piksel v centru močneje obtežen.
+	Za primrejavo bi lahko naredil še kakšno različno ostrenje, kot npr. Sobel. 
+	
+\end{document}
